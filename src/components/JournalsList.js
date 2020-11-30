@@ -19,36 +19,36 @@ const cardAttachmentsUrl =  (cardId)=> `https://api.trello.com/1/cards/${cardId}
 
 
 
-function downloadChapter(urls) {
-    var zip = new JSZip();
-    var count = 0;
-    urls.forEach(file => {
-      Axios
-        .get(file, {
-          responseType: "blob"
-        })
-        .then(response => {
-          zip.file(count+".jpg", response.data, {
-            binary: true
-          });
+// function downloadChapter(urls) {
+//     var zip = new JSZip();
+//     var count = 0;
+//     urls.forEach(file => {
+//       Axios
+//         .get(file, {
+//           responseType: "blob"
+//         })
+//         .then(response => {
+//           zip.file(count+".jpg", response.data, {
+//             binary: true
+//           });
 
-          ++count;
+//           ++count;
 
-          if (count == this.pages.length) {
-            zip
-              .generateAsync({
-                type: "blob"
-              })
-              .then(function(content) {
-                saveAs(content, new Date() + ".zip");
-              });
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    });
-}
+//           if (count == this.pages.length) {
+//             zip
+//               .generateAsync({
+//                 type: "blob"
+//               })
+//               .then(function(content) {
+//                 saveAs(content, new Date() + ".zip");
+//               });
+//           }
+//         })
+//         .catch(error => {
+//           console.log(error);
+//         });
+//     });
+// }
 
 
 
@@ -67,11 +67,7 @@ const JournalsList = (props)=>{
 
     const [attachments, setAttachments] = useState([]);
 
-
-
-
-
-
+    
     const fetchAttachments = async (id)=>{
 
         try{
@@ -87,10 +83,10 @@ const JournalsList = (props)=>{
 
     console.log(attachments);
 
-    if(attachments){
-        const urls = attachments.map(att => att.url)
-        downloadChapter(urls)
-    }
+    // if(attachments){
+    //     const urls = attachments.map(att => att.url)
+    //     downloadChapter(urls)
+    // }
 
 
     useEffect(()=>{
@@ -119,55 +115,26 @@ const JournalsList = (props)=>{
 
     return(
         <React.Fragment>
-        <main>
-        <table className="styled-table">
-                        <thead>
-                        <tr>
-                            <th>Executivo</th>
-                            <th>Terceiros</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-
-                        {response.cardsExecutivo.map(card =>{
-                        return <tr onClick={()=> fetchAttachments(card.id)} key={card.id} ><td>{card.name}</td></tr>})
+                        <div className="row">
+                            <div className="col s4">
+                            {response.cardsExecutivo.map(card =>{
+                        return <li onClick={()=> fetchAttachments(card.id)} key={card.id} >{card.name}</li>})
                         }
+                            </div>
+                        <div className="col s4">
                         {response.cardsTerceiros.map(card =>{
-                        return <tr onClick={()=> fetchAttachments(card.id)} key={card.id} ><td>{card.name}</td></tr>})
+                        return <li onClick={()=> fetchAttachments(card.id)} key={card.id}>{card.name}</li>})
                         }
-                        </tbody>
-                        <tfoot></tfoot>
- 
-                    </table>
-
-            <aside>
-
-                    <div>
+                        </div>
                         
-                    </div>
-
-                    <table className="styled-table">
-                        <thead>
-                        <tr>
-                            <th>Matéria</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+                        <div className="col s4">
                         {attachments.map(att=>{
                             return(
-                                <tr className="active-row" key={att.id}><td> <a href={att.url}>{att.name}</a></td></tr>
+                                <li key={att.id}> <a href={att.url}>{att.name}</a></li>
                             )
                         })}
-                        </tbody>
-                        <tfoot></tfoot>
- 
-                    </table>
-
-            </aside>
-        </main>
-
-
+                        </div>
+                        </div>
         </React.Fragment>
         
 
